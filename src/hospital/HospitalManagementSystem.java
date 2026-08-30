@@ -7,71 +7,109 @@ public class HospitalManagementSystem {
         System.out.println(" Mini Hospital Emergency Management System");
         System.out.println("============================================");
 
-        TreatmentHistoryStack treatmentStack =
-                new TreatmentHistoryStack();
+        Patient patient = new Patient(
+                "P105",
+                "Nimal Perera",
+                35,
+                "0771234567",
+                "High Fever"
+        );
 
-        TreatmentRecord treatment1 =
-                new TreatmentRecord(
-                        "T001",
-                        "P102",
-                        "Kamala Silva",
-                        "2026-08-30",
-                        "Dr. Perera",
-                        "Chest pain examination and medication"
-                );
+        VisitHistoryList visitHistory =
+                patient.getVisitHistory();
 
-        TreatmentRecord treatment2 =
-                new TreatmentRecord(
-                        "T002",
-                        "P105",
-                        "Nimal Perera",
-                        "2026-08-30",
-                        "Dr. Fernando",
-                        "Fever treatment and prescribed medicine"
-                );
+        visitHistory.addVisit(new Visit(
+                "V001",
+                "2026-05-10",
+                "Dr. Silva",
+                "Common Cold",
+                "Prescribed cold medicine"
+        ));
 
-        TreatmentRecord treatment3 =
-                new TreatmentRecord(
-                        "T003",
-                        "P110",
-                        "Saman Fernando",
-                        "2026-08-30",
-                        "Dr. Silva",
-                        "Leg fracture treatment and bandaging"
-                );
+        visitHistory.addVisit(new Visit(
+                "V002",
+                "2026-06-15",
+                "Dr. Fernando",
+                "Back Pain",
+                "Pain relief medication"
+        ));
 
-        treatmentStack.push(treatment1);
-        treatmentStack.push(treatment2);
-        treatmentStack.push(treatment3);
+        visitHistory.addVisit(new Visit(
+                "V003",
+                "2026-08-30",
+                "Dr. Perera",
+                "High Fever",
+                "Fever treatment and medicine"
+        ));
 
-        System.out.println("\nInitial Treatment Stack:");
-        treatmentStack.displayTreatmentRecords();
+        boolean duplicateAdded =
+                visitHistory.addVisit(new Visit(
+                        "V002",
+                        "2026-08-31",
+                        "Dr. Test",
+                        "Test Diagnosis",
+                        "Test Treatment"
+                ));
 
-        TreatmentRecord removedTreatment =
-                treatmentStack.pop();
-
-        if (removedTreatment != null) {
+        if (!duplicateAdded) {
             System.out.println(
-                    "\nMost Recently Completed Treatment Removed: "
-                            + removedTreatment.getTreatmentId()
+                    "\nDuplicate Visit ID V002 was rejected."
             );
         }
 
-        System.out.println("\nStack After First Pop:");
-        treatmentStack.displayTreatmentRecords();
+        System.out.println(
+                "\nVisit history for "
+                        + patient.getPatientId()
+                        + " - "
+                        + patient.getPatientName()
+        );
 
-        treatmentStack.pop();
-        treatmentStack.pop();
+        visitHistory.displayVisits();
 
-        TreatmentRecord recordFromEmptyStack =
-                treatmentStack.pop();
+        System.out.println("\nSearching for Visit V002");
+        System.out.println("------------------------");
 
-        if (recordFromEmptyStack == null) {
+        Visit foundVisit =
+                visitHistory.searchVisit("V002");
+
+        if (foundVisit != null) {
+            System.out.println(foundVisit);
+        }
+
+        Visit missingVisit =
+                visitHistory.searchVisit("V999");
+
+        if (missingVisit == null) {
+            System.out.println("\nVisit V999 was not found.");
+        }
+
+        boolean removed =
+                visitHistory.removeVisit("V002");
+
+        if (removed) {
             System.out.println(
-                    "\nCannot pop: Treatment stack is empty."
+                    "\nVisit V002 removed successfully."
             );
         }
 
-        treatmentStack.displayTreatmentRecords();
+        System.out.println("\nHistory After Removing V002:");
+        visitHistory.displayVisits();
+
+        Patient secondPatient = new Patient(
+                "P110",
+                "Saman Fernando",
+                48,
+                "0751234567",
+                "Leg Fracture"
+        );
+
+        System.out.println(
+                "\nVisit history for "
+                        + secondPatient.getPatientId()
+                        + " - "
+                        + secondPatient.getPatientName()
+        );
+
+        secondPatient.getVisitHistory().displayVisits();
     }
 }
